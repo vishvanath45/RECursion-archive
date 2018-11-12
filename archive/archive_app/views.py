@@ -63,13 +63,9 @@ def create_question(request):
         if Question.objects.filter(questionLink=request.POST['questionLink']).exists():
             return redirect('create_questions')
         else:
-           # import pdb; pdb.set_trace()
-            new_ques = form.save(commit='False')
-            # abc = request.user
-            # print(abc)
-            new_ques.addedBy = "sasdas"
-            new_ques.save()
-            # print(request.user)
+            f = form.save(commit = False)
+            f.addedBy = request.user
+            f.save()
             return redirect('list_questions')
 
     return render(request, 'questions-form.html', {'form': form})
@@ -79,8 +75,8 @@ def update_question(request, id):
     try:
         question =get_object_or_404( Question,pk=id)
     except:
-        return HttpResponse("id does not exist")  
-    else:      
+        return HttpResponse("id does not exist")
+    else:
         form = QuestionForm(request.POST or None, instance=question)
 
         if form.is_valid():
@@ -94,8 +90,8 @@ def delete_question(request, id):
     try:
         question =get_object_or_404( Question,pk=id)
     except:
-        return HttpResponse("id does not exist")  
-   
+        return HttpResponse("id does not exist")
+
     else:
        if request.method == 'POST':
            question.delete()
